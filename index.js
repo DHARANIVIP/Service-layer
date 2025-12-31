@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
-const authRoutes = require('./routes/authRoutes');
+const connectDB = require('./src/config/db');
+const authRoutes = require('./src/routes/authRoutes');
 
 // Initialize Express app
 const app = express();
@@ -17,6 +17,24 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // Routes
 app.use('/api/auth', authRoutes);
+
+// API info route
+app.get('/api', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Authentication Service API',
+        version: '1.0.0',
+        endpoints: {
+            health: '/',
+            authentication: '/api/auth',
+            register: '/api/auth/register',
+            login: '/api/auth/login',
+            forgotPassword: '/api/auth/forgot-password',
+            resetPassword: '/api/auth/reset-password',
+        },
+        timestamp: new Date().toISOString(),
+    });
+});
 
 // Health check route
 app.get('/', (req, res) => {
